@@ -17,9 +17,9 @@ export default function App() {
     width: 300,
     height: 300,
     type: 'svg' as DrawType,
-    data: 'http://qr-code-styling.com',
+    data: 'https://qr-code-styling.com',
     image: '/favicon.ico',
-    margin: 10,
+    margin: 0,
     qrOptions: {
       typeNumber: 0 as TypeNumber,
       mode: 'Byte' as Mode,
@@ -28,12 +28,12 @@ export default function App() {
     imageOptions: {
       hideBackgroundDots: true,
       imageSize: 0.4,
-      margin: 20,
+      margin: 0,
       crossOrigin: 'anonymous',
     },
     dotsOptions: {
       color: '#222222',
-      type: 'rounded' as DotType
+      type: 'extra-rounded' as DotType
     },
     backgroundOptions: {
       color: '#ffffff',
@@ -48,7 +48,7 @@ export default function App() {
     }
   });
 
-  const [fileExt, setFileExt] = useState<Extension>("svg");
+  const [fileExt, setFileExt] = useState<Extension>("png");
   const [qrCode] = useState<QRCodeStyling>(new QRCodeStyling(options));
   const ref = useRef<HTMLDivElement>(null);
 
@@ -63,55 +63,14 @@ export default function App() {
     qrCode.update(options);
   }, [qrCode, options]);
 
-  const onDataChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setOptions(options => ({
-      ...options,
-      data: event.target.value
+  const onChange = (key: keyof Options, value: any) => {
+    setOptions(prev => ({
+      ...prev,
+      [key]: value
     }));
   };
 
-  const onExtensionChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setFileExt(event.target.value as Extension);
-  };
-
-  const onDownloadClick = () => {
-    if (!qrCode) return;
-    qrCode.download({
-      extension: fileExt
-    });
-  };
-
-  // New event handlers for customization
-  const onColorChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setOptions(options => ({
-      ...options,
-      dotsOptions: {
-        ...options.dotsOptions,
-        color: event.target.value
-      }
-    }));
-  };
-
-  const onBgColorChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setOptions(options => ({
-      ...options,
-      backgroundOptions: {
-        ...options.backgroundOptions,
-        color: event.target.value
-      }
-    }));
-  };
-
-  const onSizeChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const size = parseInt(event.target.value, 10);
-    setOptions(options => ({
-      ...options,
-      width: size,
-      height: size
-    }));
-  };
-
-  const onLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const imageURL = URL.createObjectURL(file);
@@ -127,62 +86,98 @@ export default function App() {
       <h2>QR Code Customizer</h2>
       <div ref={ref} />
 
-      <div style={styles.inputWrapper}>
-        {/* URL Input */}
-        <input
-          value={options.data}
-          onChange={onDataChange}
-          placeholder="Enter URL"
-          style={styles.inputBox}
-        />
+      <div style={{ margin: "20px 0" }}>
+        <label>Data:</label>
+        <input value={options.data} onChange={e => onChange("data", e.target.value)} placeholder="Enter URL" />
 
-        {/* Download Format Selector */}
-        <select onChange={onExtensionChange} value={fileExt}>
-          <option value="svg">SVG</option>
-          <option value="png">PNG</option>
-          <option value="jpeg">JPEG</option>
-          <option value="webp">WEBP</option>
+        <label>Image File:</label>
+        <input type="file" onChange={onFileChange} />
+
+        <label>Width (px):</label>
+        <input type="number" value={options.width} onChange={e => onChange("width", parseInt(e.target.value))} />
+
+        <label>Height (px):</label>
+        <input type="number" value={options.height} onChange={e => onChange("height", parseInt(e.target.value))} />
+
+        <label>Margin (px):</label>
+        <input type="number" value={options.margin} onChange={e => onChange("margin", parseInt(e.target.value))} />
+
+        <h3>Dots Options</h3>
+        <label>Dots Style:</label>
+        <select value={options.dotsOptions?.type} onChange={e => onChange("dotsOptions", { ...options.dotsOptions, type: e.target.value })}>
+          <option value="square">Square</option>
+          <option value="dots">Dots</option>
+          <option value="rounded">Rounded</option>
+          <option value="extra-rounded">Extra Rounded</option>
         </select>
 
-        {/* Download Button */}
-        <button onClick={onDownloadClick}>Download</button>
-      </div>
-
-      {/* New Customization Inputs */}
-      <div style={styles.customizationWrapper}>
-        <label>Size (px):</label>
-        <input type="range" min="100" max="500" value={options.width} onChange={onSizeChange} />
-
         <label>Dots Color:</label>
-        <input type="color" value={options.dotsOptions?.color} onChange={onColorChange} />
+        <input type="color" value={options.dotsOptions?.color} onChange={e => onChange("dotsOptions", { ...options.dotsOptions, color: e.target.value })} />
 
+        <h3>Corners Square Options</h3>
+        <label>Square Style:</label>
+        <select value={options.cornersSquareOptions?.type} onChange={e => onChange("cornersSquareOptions", { ...options.cornersSquareOptions, type: e.target.value })}>
+          <option value="square">Square</option>
+          <option value="extra-rounded">Extra Rounded</option>
+        </select>
+
+        <label>Corners Square Color:</label>
+        <input type="color" value={options.cornersSquareOptions?.color} onChange={e => onChange("cornersSquareOptions", { ...options.cornersSquareOptions, color: e.target.value })} />
+
+        <h3>Corners Dot Options</h3>
+        <label>Dot Style:</label>
+        <select value={options.cornersDotOptions?.type} onChange={e => onChange("cornersDotOptions", { ...options.cornersDotOptions, type: e.target.value })}>
+          <option value="dot">Dot</option>
+          <option value="square">Square</option>
+        </select>
+
+        <label>Corners Dot Color:</label>
+        <input type="color" value={options.cornersDotOptions?.color} onChange={e => onChange("cornersDotOptions", { ...options.cornersDotOptions, color: e.target.value })} />
+
+        <h3>Background Options</h3>
         <label>Background Color:</label>
-        <input type="color" value={options.backgroundOptions?.color} onChange={onBgColorChange} />
+        <input type="color" value={options.backgroundOptions?.color} onChange={e => onChange("backgroundOptions", { ...options.backgroundOptions, color: e.target.value })} />
 
-        <label>Upload Logo:</label>
-        <input type="file" onChange={onLogoChange} />
+        <h3>Image Options</h3>
+        <label>Hide Background Dots:</label>
+        <input type="checkbox" checked={options.imageOptions?.hideBackgroundDots} onChange={e => onChange("imageOptions", { ...options.imageOptions, hideBackgroundDots: e.target.checked })} />
+
+        <label>Image Size:</label>
+        <input type="number" value={options.imageOptions?.imageSize} step="0.1" min="0" max="1" onChange={e => onChange("imageOptions", { ...options.imageOptions, imageSize: parseFloat(e.target.value) })} />
+
+        <label>Image Margin:</label>
+        <input type="number" value={options.imageOptions?.margin} onChange={e => onChange("imageOptions", { ...options.imageOptions, margin: parseInt(e.target.value) })} />
+
+        <h3>QR Options</h3>
+        <label>Type Number:</label>
+        <input type="number" value={options.qrOptions?.typeNumber} onChange={e => onChange("qrOptions", { ...options.qrOptions, typeNumber: parseInt(e.target.value) })} />
+
+        <label>Mode:</label>
+        <select value={options.qrOptions?.mode} onChange={e => onChange("qrOptions", { ...options.qrOptions, mode: e.target.value as Mode })}>
+          <option value="Numeric">Numeric</option>
+          <option value="Alphanumeric">Alphanumeric</option>
+          <option value="Byte">Byte</option>
+          <option value="Kanji">Kanji</option>
+        </select>
+
+        <label>Error Correction Level:</label>
+        <select value={options.qrOptions?.errorCorrectionLevel} onChange={e => onChange("qrOptions", { ...options.qrOptions, errorCorrectionLevel: e.target.value as ErrorCorrectionLevel })}>
+          <option value="L">L</option>
+          <option value="M">M</option>
+          <option value="Q">Q</option>
+          <option value="H">H</option>
+        </select>
+
+        <h3>Download Options</h3>
+        <label>File Extension:</label>
+        <select value={fileExt} onChange={e => setFileExt(e.target.value as Extension)}>
+          <option value="png">PNG</option>
+          <option value="jpeg">JPEG</option>
+          <option value="svg">SVG</option>
+        </select>
+
+        <button onClick={() => qrCode.download({ extension: fileExt })}>Download</button>
       </div>
     </div>
   );
 }
-
-const styles = {
-  inputWrapper: {
-    margin: "20px 0",
-    display: "flex",
-    justifyContent: "space-between",
-    width: "100%",
-    maxWidth: "300px"
-  },
-  inputBox: {
-    flexGrow: 1,
-    marginRight: 20
-  },
-  customizationWrapper: {
-    margin: "20px 0",
-    display: "flex",
-    flexDirection: "column" as 'column',  // Fixes the flexDirection type error
-    gap: "10px",
-    maxWidth: "300px"
-  }
-};
