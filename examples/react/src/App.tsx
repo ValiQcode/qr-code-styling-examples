@@ -33,40 +33,21 @@ export default function App() {
     },
     dotsOptions: {
       color: '#222222',
-      // gradient: {
-      //   type: 'linear', // 'radial'
-      //   rotation: 0,
-      //   colorStops: [{ offset: 0, color: '#8688B2' }, { offset: 1, color: '#77779C' }]
-      // },
       type: 'rounded' as DotType
     },
     backgroundOptions: {
-      color: '#5FD4F3',
-      // gradient: {
-      //   type: 'linear', // 'radial'
-      //   rotation: 0,
-      //   colorStops: [{ offset: 0, color: '#ededff' }, { offset: 1, color: '#e6e7ff' }]
-      // },
+      color: '#ffffff',
     },
     cornersSquareOptions: {
       color: '#222222',
       type: 'extra-rounded' as CornerSquareType,
-      // gradient: {
-      //   type: 'linear', // 'radial'
-      //   rotation: 180,
-      //   colorStops: [{ offset: 0, color: '#25456e' }, { offset: 1, color: '#4267b2' }]
-      // },
     },
     cornersDotOptions: {
       color: '#222222',
       type: 'dot' as CornerDotType,
-      // gradient: {
-      //   type: 'linear', // 'radial'
-      //   rotation: 180,
-      //   colorStops: [{ offset: 0, color: '#00266e' }, { offset: 1, color: '#4060b3' }]
-      // },
     }
   });
+
   const [fileExt, setFileExt] = useState<Extension>("svg");
   const [qrCode] = useState<QRCodeStyling>(new QRCodeStyling(options));
   const ref = useRef<HTMLDivElement>(null);
@@ -100,19 +81,86 @@ export default function App() {
     });
   };
 
+  // New event handlers for customization
+  const onColorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setOptions(options => ({
+      ...options,
+      dotsOptions: {
+        ...options.dotsOptions,
+        color: event.target.value
+      }
+    }));
+  };
+
+  const onBgColorChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setOptions(options => ({
+      ...options,
+      backgroundOptions: {
+        ...options.backgroundOptions,
+        color: event.target.value
+      }
+    }));
+  };
+
+  const onSizeChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const size = parseInt(event.target.value, 10);
+    setOptions(options => ({
+      ...options,
+      width: size,
+      height: size
+    }));
+  };
+
+  const onLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageURL = URL.createObjectURL(file);
+      setOptions(options => ({
+        ...options,
+        image: imageURL
+      }));
+    }
+  };
+
   return (
     <div className="App">
-      <h2>QR code styling for React</h2>
+      <h2>QR Code Customizer</h2>
       <div ref={ref} />
+
       <div style={styles.inputWrapper}>
-        <input value={options.data} onChange={onDataChange} style={styles.inputBox} />
+        {/* URL Input */}
+        <input
+          value={options.data}
+          onChange={onDataChange}
+          placeholder="Enter URL"
+          style={styles.inputBox}
+        />
+
+        {/* Download Format Selector */}
         <select onChange={onExtensionChange} value={fileExt}>
           <option value="svg">SVG</option>
           <option value="png">PNG</option>
           <option value="jpeg">JPEG</option>
           <option value="webp">WEBP</option>
         </select>
+
+        {/* Download Button */}
         <button onClick={onDownloadClick}>Download</button>
+      </div>
+
+      {/* New Customization Inputs */}
+      <div style={styles.customizationWrapper}>
+        <label>Size (px):</label>
+        <input type="range" min="100" max="500" value={options.width} onChange={onSizeChange} />
+
+        <label>Dots Color:</label>
+        <input type="color" value={options.dotsOptions?.color} onChange={onColorChange} />
+
+        <label>Background Color:</label>
+        <input type="color" value={options.backgroundOptions?.color} onChange={onBgColorChange} />
+
+        <label>Upload Logo:</label>
+        <input type="file" onChange={onLogoChange} />
       </div>
     </div>
   );
@@ -129,5 +177,12 @@ const styles = {
   inputBox: {
     flexGrow: 1,
     marginRight: 20
+  },
+  customizationWrapper: {
+    margin: "20px 0",
+    display: "flex",
+    flexDirection: "column" as 'column',  // Fixes the flexDirection type error
+    gap: "10px",
+    maxWidth: "300px"
   }
 };
