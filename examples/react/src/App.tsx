@@ -84,99 +84,116 @@ export default function App() {
   return (
     <div className="App">
       <h2>QR Code Customizer</h2>
-      <div ref={ref} />
+      <div ref={ref} className="qr-code-preview" />
 
-      <div style={{ margin: "20px 0" }}>
-        <label>Data:</label>
-        <input value={options.data} onChange={e => onChange("data", e.target.value)} placeholder="Enter URL" />
+      <div className="options-container">
+        <div className="option-group">
+          <h3>Main Options</h3>
+          <label>Data</label>
+          <input value={options.data} onChange={e => onChange("data", e.target.value)} placeholder="Enter URL" />
 
-        <label>Image File:</label>
-        <input type="file" onChange={onFileChange} />
+          <label>Image File</label>
+          <input type="file" onChange={onFileChange} />
 
-        <label>Width (px):</label>
-        <input type="number" value={options.width} onChange={e => onChange("width", parseInt(e.target.value))} />
+          <label>Width (px)</label>
+          <input type="number" value={options.width} onChange={e => onChange("width", parseInt(e.target.value))} />
 
-        <label>Height (px):</label>
-        <input type="number" value={options.height} onChange={e => onChange("height", parseInt(e.target.value))} />
+          <label>Height (px)</label>
+          <input type="number" value={options.height} onChange={e => onChange("height", parseInt(e.target.value))} />
 
-        <label>Margin (px):</label>
-        <input type="number" value={options.margin} onChange={e => onChange("margin", parseInt(e.target.value))} />
+          <label>Margin (px)</label>
+          <input type="number" value={options.margin} onChange={e => onChange("margin", parseInt(e.target.value))} />
+        </div>
 
-        <h3>Dots Options</h3>
-        <label>Dots Style:</label>
-        <select value={options.dotsOptions?.type} onChange={e => onChange("dotsOptions", { ...options.dotsOptions, type: e.target.value })}>
-          <option value="square">Square</option>
-          <option value="dots">Dots</option>
-          <option value="rounded">Rounded</option>
-          <option value="extra-rounded">Extra Rounded</option>
-        </select>
+        <div className="option-group">
+          <h3>Dots Options</h3>
+          <label>Dots Style</label>
+          <select value={options.dotsOptions?.type} onChange={e => onChange("dotsOptions", { ...options.dotsOptions, type: e.target.value })}>
+            <option value="square">Square</option>
+            <option value="dots">Dots</option>
+            <option value="rounded">Rounded</option>
+            <option value="extra-rounded">Extra Rounded</option>
+          </select>
 
-        <label>Dots Color:</label>
-        <input type="color" value={options.dotsOptions?.color} onChange={e => onChange("dotsOptions", { ...options.dotsOptions, color: e.target.value })} />
+          <label>Dots Color</label>
+          <input type="color" value={options.dotsOptions?.color} onChange={e => onChange("dotsOptions", { ...options.dotsOptions, color: e.target.value })} />
+        </div>
 
-        <h3>Corners Square Options</h3>
-        <label>Square Style:</label>
-        <select value={options.cornersSquareOptions?.type} onChange={e => onChange("cornersSquareOptions", { ...options.cornersSquareOptions, type: e.target.value })}>
-          <option value="square">Square</option>
-          <option value="extra-rounded">Extra Rounded</option>
-        </select>
+        <div className="option-group">
+          <h3>Corners Square Options</h3>
+          <label>Square Style</label>
+          <select value={options.cornersSquareOptions?.type} onChange={e => onChange("cornersSquareOptions", { ...options.cornersSquareOptions, type: e.target.value })}>
+            <option value="square">Square</option>
+            <option value="extra-rounded">Extra Rounded</option>
+          </select>
 
-        <label>Corners Square Color:</label>
-        <input type="color" value={options.cornersSquareOptions?.color} onChange={e => onChange("cornersSquareOptions", { ...options.cornersSquareOptions, color: e.target.value })} />
+          <label>Corners Square Color</label>
+          <input type="color" value={options.cornersSquareOptions?.color} onChange={e => onChange("cornersSquareOptions", { ...options.cornersSquareOptions, color: e.target.value })} />
+        </div>
 
-        <h3>Corners Dot Options</h3>
-        <label>Dot Style:</label>
-        <select value={options.cornersDotOptions?.type} onChange={e => onChange("cornersDotOptions", { ...options.cornersDotOptions, type: e.target.value })}>
-          <option value="dot">Dot</option>
-          <option value="square">Square</option>
-        </select>
+        <div className="option-group">
+          <h3>Corners Dot Options</h3>
+          <label>Dot Style</label>
+          <select value={options.cornersDotOptions?.type} onChange={e => onChange("cornersDotOptions", { ...options.cornersDotOptions, type: e.target.value })}>
+            <option value="dot">Dot</option>
+            <option value="square">Square</option>
+          </select>
 
-        <label>Corners Dot Color:</label>
-        <input type="color" value={options.cornersDotOptions?.color} onChange={e => onChange("cornersDotOptions", { ...options.cornersDotOptions, color: e.target.value })} />
+          <label>Corners Dot Color</label>
+          <input type="color" value={options.cornersDotOptions?.color} onChange={e => onChange("cornersDotOptions", { ...options.cornersDotOptions, color: e.target.value })} />
+        </div>
 
-        <h3>Background Options</h3>
-        <label>Background Color:</label>
-        <input type="color" value={options.backgroundOptions?.color} onChange={e => onChange("backgroundOptions", { ...options.backgroundOptions, color: e.target.value })} />
+        <div className="option-group">
+          <h3>Background Options</h3>
+          <label>Background Color</label>
+          <input type="color" value={options.backgroundOptions?.color} onChange={e => onChange("backgroundOptions", { ...options.backgroundOptions, color: e.target.value })} />
+        </div>
 
-        <h3>Image Options</h3>
-        <label>Hide Background Dots:</label>
-        <input type="checkbox" checked={options.imageOptions?.hideBackgroundDots} onChange={e => onChange("imageOptions", { ...options.imageOptions, hideBackgroundDots: e.target.checked })} />
+        <div className="option-group">
+          <h3>Image Options</h3>
+          <label>Hide Background Dots</label>
+          <input type="checkbox" checked={options.imageOptions?.hideBackgroundDots} onChange={e => onChange("imageOptions", { ...options.imageOptions, hideBackgroundDots: e.target.checked })} />
 
-        <label>Image Size:</label>
-        <input type="number" value={options.imageOptions?.imageSize} step="0.1" min="0" max="1" onChange={e => onChange("imageOptions", { ...options.imageOptions, imageSize: parseFloat(e.target.value) })} />
+          <label>Image Size</label>
+          <input type="number" value={options.imageOptions?.imageSize} step="0.1" min="0" max="1" onChange={e => onChange("imageOptions", { ...options.imageOptions, imageSize: parseFloat(e.target.value) })} />
 
-        <label>Image Margin:</label>
-        <input type="number" value={options.imageOptions?.margin} onChange={e => onChange("imageOptions", { ...options.imageOptions, margin: parseInt(e.target.value) })} />
+          <label>Image Margin</label>
+          <input type="number" value={options.imageOptions?.margin} onChange={e => onChange("imageOptions", { ...options.imageOptions, margin: parseInt(e.target.value) })} />
+        </div>
 
-        <h3>QR Options</h3>
-        <label>Type Number:</label>
-        <input type="number" value={options.qrOptions?.typeNumber} onChange={e => onChange("qrOptions", { ...options.qrOptions, typeNumber: parseInt(e.target.value) })} />
+        <div className="option-group">
+          <h3>QR Options</h3>
+          <label>Type Number</label>
+          <input type="number" value={options.qrOptions?.typeNumber} onChange={e => onChange("qrOptions", { ...options.qrOptions, typeNumber: parseInt(e.target.value) })} />
 
-        <label>Mode:</label>
-        <select value={options.qrOptions?.mode} onChange={e => onChange("qrOptions", { ...options.qrOptions, mode: e.target.value as Mode })}>
-          <option value="Numeric">Numeric</option>
-          <option value="Alphanumeric">Alphanumeric</option>
-          <option value="Byte">Byte</option>
-          <option value="Kanji">Kanji</option>
-        </select>
+          <label>Mode</label>
+          <select value={options.qrOptions?.mode} onChange={e => onChange("qrOptions", { ...options.qrOptions, mode: e.target.value as Mode })}>
+            <option value="Numeric">Numeric</option>
+            <option value="Alphanumeric">Alphanumeric</option>
+            <option value="Byte">Byte</option>
+            <option value="Kanji">Kanji</option>
+          </select>
 
-        <label>Error Correction Level:</label>
-        <select value={options.qrOptions?.errorCorrectionLevel} onChange={e => onChange("qrOptions", { ...options.qrOptions, errorCorrectionLevel: e.target.value as ErrorCorrectionLevel })}>
-          <option value="L">L</option>
-          <option value="M">M</option>
-          <option value="Q">Q</option>
-          <option value="H">H</option>
-        </select>
+          <label>Error Correction Level</label>
+          <select value={options.qrOptions?.errorCorrectionLevel} onChange={e => onChange("qrOptions", { ...options.qrOptions, errorCorrectionLevel: e.target.value as ErrorCorrectionLevel })}>
+            <option value="L">L</option>
+            <option value="M">M</option>
+            <option value="Q">Q</option>
+            <option value="H">H</option>
+          </select>
+        </div>
 
-        <h3>Download Options</h3>
-        <label>File Extension:</label>
-        <select value={fileExt} onChange={e => setFileExt(e.target.value as Extension)}>
-          <option value="png">PNG</option>
-          <option value="jpeg">JPEG</option>
-          <option value="svg">SVG</option>
-        </select>
+        <div className="option-group">
+          <h3>Download Options</h3>
+          <label>File Extension</label>
+          <select value={fileExt} onChange={e => setFileExt(e.target.value as Extension)}>
+            <option value="png">PNG</option>
+            <option value="jpeg">JPEG</option>
+            <option value="svg">SVG</option>
+          </select>
 
-        <button onClick={() => qrCode.download({ extension: fileExt })}>Download</button>
+          <button onClick={() => qrCode.download({ extension: fileExt })}>Download</button>
+        </div>
       </div>
     </div>
   );
